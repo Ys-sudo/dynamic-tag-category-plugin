@@ -51,15 +51,18 @@ function add_tag_to_category_products($category_identifier, $tag_name) {
             
             // Get the current product ID
             $product_id = get_the_ID();
-            
-            // Add the user-specified tag to the product
-            wp_set_post_terms($product_id, $tag_name, 'product_tag', true);
+
+            // Check if the product already has the tag
+            if (!has_term($tag_name, 'product_tag', $product_id)) {
+                // Add the user-specified tag to the product
+                wp_set_post_terms($product_id, $tag_name, 'product_tag', true);
+            }
         }
         
         // Reset post data
         wp_reset_postdata();
         
-        echo '<div class="updated notice"><p>Tag "' . esc_html($tag_name) . '" has been added to all products in the category "' . esc_html($category->name) . '".</p></div>';
+        echo '<div class="updated notice"><p>Tag "' . esc_html($tag_name) . '" has been added to all products in the category "' . esc_html($category->name) . '" (if not already present).</p></div>';
     } else {
         echo '<div class="error notice"><p>No products found in the category "' . esc_html($category->name) . '".</p></div>';
     }
